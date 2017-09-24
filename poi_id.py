@@ -14,6 +14,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import GridSearchCV, StratifiedShuffleSplit
 from sklearn.ensemble import RandomForestClassifier
 from tester import test_classifier
+import matplotlib.pyplot as plt
 
 with open("final_project_dataset.pkl", "r") as data_file:  # opening the pickle file and reading it in a dictionary
     data_dict = pickle.load(data_file)
@@ -129,12 +130,24 @@ labels, features = targetFeatureSplit(data)
 
 # Generating top 5 features
 selector = SelectKBest(f_classif, k=5)
+print "+++++++++++++++++++++++++++++"
+scores = pd.DataFrame.from_records(
+    sorted(zip(selected_features[1:], selector.fit(features, labels).scores_), key=lambda x: x[1], reverse=True)).set_index(0)
+print scores
+scores.plot.bar()
+plt.ylabel("SelectKBest scores")
+plt.xlabel("Features")
+plt.legend(["scores"])
+plt.savefig("./feature_selection/1.png", bbox_inches='tight')
+print "+++++++++++++++++++++++++++++"
+
 top_5 = sorted(zip(selected_features[1:], selector.fit(features, labels).scores_), key=lambda x: x[1], reverse=True)[:5]
 temp = pd.DataFrame.from_records(top_5)
 temp.columns = ["features", "score ^"]
 print "Printing Top 5 Features" + "\n"
 print "\n" + tabulate(temp, headers='keys', tablefmt='pipe') + "\n"
 selected_features = ["poi"] + map(lambda x: x[0], top_5)
+
 data = featureFormat(my_dataset, selected_features, sort_keys=True)
 labels, features = targetFeatureSplit(data)
 

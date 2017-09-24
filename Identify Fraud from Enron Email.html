@@ -12214,7 +12214,10 @@ div#notebook {
 <li><p>Finally I though of <strong>email_involvement</strong> which is intuitively <strong>summation</strong> of <strong>total from/to messages</strong> and  <strong>total shared receipt with poi</strong>.</p>
 </li>
 </ul>
-<h3 id="4.2-Selecting-Top-5">4.2 Selecting Top 5<a class="anchor-link" href="#4.2-Selecting-Top-5">&#194;&#182;</a></h3><p>Next I used <code>SelectKBest()</code> method of <code>sklearn</code> to select the top 5 features along with their scores. The table below shows my findings.</p>
+<h3 id="4.2-Visualizing-the-scores-of-the-features">4.2 Visualizing the scores of the features<a class="anchor-link" href="#4.2-Visualizing-the-scores-of-the-features">&#194;&#182;</a></h3><p>In the following graph we can see how the scores of the features are dispersed.</p>
+<p><img src="./feature_selection/1.png" alt="salary_bonus.png"></p>
+<p>We can see that after the top 5, the score seems to drop rapidly. So, I decided to keep only the top 5 features for training of the classifiers.</p>
+<h3 id="4.3-Selecting-Top-5">4.3 Selecting Top 5<a class="anchor-link" href="#4.3-Selecting-Top-5">&#194;&#182;</a></h3><p>Next I used <code>SelectKBest()</code> method of <code>sklearn</code> to select the top 5 features along with their scores. The table below shows my findings.</p>
 <table>
 <thead><tr>
 <th style="text-align:left">features</th>
@@ -12262,7 +12265,10 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Once we have have finished selecting the best features, we go with making classifiers to train on the our outlier-removed dataset and top 5 features. However we are always in search something better. This is where tuning of parameters come into picture. The provide the best parameters in which the algorithm produces Often tuning of the parameters are necessary for a better performance. I have tuned manually as well as used automatic optimization using <code>GridSearchCV</code>. I will discuss the classifiers I have used along-with the parameters I have tuned in the following sections</p>
+<p>Once we have have finished selecting the best features, we go with making classifiers to train on the our outlier-removed dataset and top 5 features. However we are always in search something better. This is where tuning of parameters come into picture. The provide the best parameters in which the algorithm produces Often tuning of the parameters are necessary for a better performance. I have tuned manually as well as used automatic optimization using <code>GridSearchCV</code>. I will discuss the classifiers I have used along-with the parameters I have tuned in the following sections.</p>
+<p>Hoever if the algorithms are not tuned well, then it may lead to overfitting or underfitting. Overfitting occurs when the model or the algorithm fits the data too well.  Specifically, overfitting occurs if the model or algorithm shows low bias but high variance.  Overfitting is often a result of an excessively complicated model, and it can be prevented by fitting multiple models and using validation or cross-validation to compare their predictive accuracies on test data.
+Underfitting occurs when the model or the algorithm does not fit the data well enough. Specifically, underfitting occurs if the model or algorithm shows low variance but high bias. Underfitting is often a result of an excessively simple model.</p>
+<p>Both overfitting and underfitting lead to poor predictions on new data sets.</p>
 <h3 id="5.1-Tuning-Gaussian-Naive-Bayes-Classifier">5.1 Tuning Gaussian Naive Bayes Classifier<a class="anchor-link" href="#5.1-Tuning-Gaussian-Naive-Bayes-Classifier">&#194;&#182;</a></h3><p>Naive Bayes is a simple technique for constructing classifiers - models that assign class labels to problem instances, represented as vectors of feature values, where the lass labels are drawn from some finite set. It is not a single algorithm for training such classifiers, but a family of algorithms based on a common principle: all naive Bayes classifiers assume that the value of a particular feature is independent of the value of any other feature, given the class variable.</p>
 <p>The parameters of Naive Bayes that I have tuned:</p>
 <ul>
@@ -12311,7 +12317,18 @@ Decision trees are commonly used in operations research, specifically in decisio
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="6.1-Importance-of-Validation">6.1 Importance of Validation<a class="anchor-link" href="#6.1-Importance-of-Validation">&#194;&#182;</a></h3><p>Validation is a way that evaluates the statistical analysis or the performance against an unseen data set. I have used the tester code supplied by Udacity to make perform the evaluation. Finally as a metric I have used Accuracy, Precision, Recall, F1 and F2 to judge the performance of the classifiers. But before them we need to define 4 terms - <strong>True Positive</strong>, <strong>True Negative</strong>, <strong>False Positive</strong> and <strong>False Negative</strong> which eventually defines the above metrics.</p>
+<h3 id="6.1-Importance-of-Validation-and-How-it-was-Performed">6.1 Importance of Validation and How it was Performed<a class="anchor-link" href="#6.1-Importance-of-Validation-and-How-it-was-Performed">&#194;&#182;</a></h3><p>Validation is a way that evaluates the statistical analysis or the performance against an unseen data set. I have used the tester code supplied by Udacity to make perform the evaluation.</p>
+<p>But before evaluation the tester.py used a number of ways to cross-validate the results. In this section, I'm going to discuss about that.</p>
+<ul>
+<li><strong>StratifiedShuffleSplit(labels, folds, random_state=42)</strong>: Provides train/test indices to split data in train/test sets. This cross-validation object is a merge of StratifiedKFold and ShuffleSplit, which returns stratified randomized folds. The folds are made by preserving the percentage of samples for each class.<ul>
+<li><strong>labels</strong>: Labels of samples.</li>
+<li><strong>folds</strong>: Number of re-shuffling &amp; splitting iterations. Defined as 1000 here.</li>
+<li><strong>random_state</strong>: Pseudo-random number generator state used for random sampling.
+Now based on this cross-validation, tester.py loops 1000 times and finally the mean of the evaluation metrics (we will discuss in the next section are taken).</li>
+</ul>
+</li>
+</ul>
+<h3 id="6.2-Evaluation-of-the-classifiers">6.2 Evaluation of the classifiers<a class="anchor-link" href="#6.2-Evaluation-of-the-classifiers">&#194;&#182;</a></h3><p>Finally as a metric I have used Accuracy, Precision, Recall, F1 and F2 to judge the performance of the classifiers. But before them we need to define 4 terms - <strong>True Positive</strong>, <strong>True Negative</strong>, <strong>False Positive</strong> and <strong>False Negative</strong> which eventually defines the above metrics.</p>
 <ul>
 <li><strong>True Positive</strong>: A true positive test result is one that detects the condition when the condition is present. </li>
 <li><p><strong>True Negative</strong>: A true negative test result is one that does not detect the condition when the condition is absent.</p>
@@ -12333,7 +12350,7 @@ Decision trees are commonly used in operations research, specifically in decisio
 <ul>
 <li><strong>F score</strong>: It is defined as, $ 2.\frac{Precision * Recall}{Precision + Recall} $</li>
 </ul>
-<h3 id="5.6-Scoring-and-Performance-of-the-Classifiers">5.6 Scoring and Performance of the Classifiers<a class="anchor-link" href="#5.6-Scoring-and-Performance-of-the-Classifiers">&#194;&#182;</a></h3><p>After trying out the classifiers, here's the result I got.</p>
+<p>After trying out the classifiers, here's the result I got.</p>
 <table>
 <thead><tr>
 <th style="text-align:left">Classifiers</th>
@@ -12379,7 +12396,6 @@ Decision trees are commonly used in operations research, specifically in decisio
 </tr>
 </tbody>
 </table>
-<h3 id="5.5-Choosing-the-best">5.5 Choosing the best<a class="anchor-link" href="#5.5-Choosing-the-best">&#194;&#182;</a></h3><p>Now seeing the above statistics, we can say that Decision Trees gave the best results. So I'll choose it.</p>
 
 </div>
 </div>
@@ -12388,7 +12404,26 @@ Decision trees are commonly used in operations research, specifically in decisio
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="6.-References">6. References<a class="anchor-link" href="#6.-References">&#194;&#182;</a></h2>
+<h2 id="7.-Choosing-the-Best">7. Choosing the Best<a class="anchor-link" href="#7.-Choosing-the-Best">&#194;&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now seeing the above statistics, we can say that <strong>Decision Trees</strong> gave the best results. So I'll choose it. The performance of the Decision Tree can be summarized below as:</p>
+<p><strong>Precision of 0.43</strong>: which tells us 0.43 proportion of Enron employees we found as POI actually is a POI.</p>
+<p><strong>Recall of 0.34</strong>: which tells us 0.34 proportion of Enron employees that actually is a POI were found by us as POI.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="8.-References">8. References<a class="anchor-link" href="#8.-References">&#194;&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12403,6 +12438,9 @@ Decision trees are commonly used in operations research, specifically in decisio
 <li><a href="https://www.datacamp.com/">https://www.datacamp.com/</a></li>
 <li><a href="https://www.analyticsvidhya.com/">https://www.analyticsvidhya.com/</a></li>
 <li><a href="http://scikit-learn.org/stable/">http://scikit-learn.org/stable/</a></li>
+<li><a href="https://chemicalstatistician.wordpress.com/2014/03/19/machine-learning-lesson-of-the-day-overfitting-and-underfitting/">https://chemicalstatistician.wordpress.com/2014/03/19/machine-learning-lesson-of-the-day-overfitting-and-underfitting/</a></li>
+<li><a href="https://www.quora.com/What-is-the-best-way-to-understand-the-terms-precision-and-recall">https://www.quora.com/What-is-the-best-way-to-understand-the-terms-precision-and-recall</a></li>
+<li><a href="https://www.stackoverflow.com">https://www.stackoverflow.com</a></li>
 </ul>
 
 </div>
